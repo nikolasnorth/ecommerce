@@ -26,7 +26,7 @@ export default function AccountPage() {
   }
 
   return (
-    <>
+    <main className="container mx-auto px-4 flex flex-col items-center justify-center h-screen">
       <h1 className="text-4xl font-medium text-center">Account Details</h1>
       <p className="text-center">Current Balance: $100.00</p>
       <form className="flex flex-col items-center">
@@ -41,12 +41,13 @@ export default function AccountPage() {
           onChange={event => setName(event.target.value)}
         />
         <input
+          className="my-4 px-4 py-2 bg-purple-700 text-white rounded-lg"
           type="submit"
           onClick={onSubmitUpdateAccount}
           value="Update"
           disabled={isUpdateButtonDisabled}
         />
       </form>
-    </>
+    </main>
   );
 }
