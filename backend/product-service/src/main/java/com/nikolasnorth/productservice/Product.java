@@ -5,14 +5,20 @@ import java.time.LocalDate;
 public class Product {
 
   private int id;
+
   private String name;
+
   private String description;
+
   private int priceInCents;
+
   private int vendorId;
+
   private LocalDate createdAt;
+
   private LocalDate updatedAt;
 
-  public Product() {
+  protected Product() {
   }
 
   public Product(int id, String name, String description, int priceInCents, int vendorId, LocalDate createdAt, LocalDate updatedAt) {
