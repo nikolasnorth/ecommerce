@@ -15,10 +15,7 @@ public class Product {
   public Product() {
   }
 
-  public Product(
-    int id, String name, String description, int priceInCents,
-    int vendorId, LocalDate createdAt, LocalDate updatedAt
-  ) {
+  public Product(int id, String name, String description, int priceInCents, int vendorId, LocalDate createdAt, LocalDate updatedAt) {
     this.id = id;
     this.name = name;
     this.description = description;
