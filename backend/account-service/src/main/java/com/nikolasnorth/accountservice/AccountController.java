@@ -25,4 +25,12 @@ public class AccountController {
   public void createAccount(@RequestBody Account account) {
     accountService.createAccount(account);
   }
+
+  @DeleteMapping(path = "{id}")
+  public void deleteAccount(@PathVariable("id") int id) {
+    try {
+      accountService.deleteAccount(id);
+    } catch (IllegalArgumentException ignored) {
+    }
+  }
 }

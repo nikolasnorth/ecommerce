@@ -1,6 +1,7 @@
 package com.nikolasnorth.accountservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +23,15 @@ public class AccountService {
 
   public void createAccount(Account account) {
     if (accountRepository.findByEmail(account.getEmail()).isPresent()) {
-      throw new IllegalStateException(String.format("An account with email '%s' already exists.", account.getEmail()));
+      throw new IllegalArgumentException(String.format("An account with email '%s' already exists.", account.getEmail()));
     }
     accountRepository.save(account);
+  }
+
+  public void deleteAccount(int id) {
+    try {
+      accountRepository.deleteById(id);
+    } catch (EmptyResultDataAccessException ignored) {
+    }
   }
 }
