@@ -1,32 +1,32 @@
 # Product Service
 
 ## API
-- `GET /products?sorted=recent`
+- [ ] `GET /products?sorted=recent`
   - Returns a list of the most recently created product(s). Max of 50.
-- `GET /products?ids=`
+- [ ] `GET /products?ids=`
   - Returns a list of product(s) with the given id(s).
   - `ids`: A comma-separated list of one or more product id(s). Max of 50.
     - e.g. `ids=1,12,13,45,56`
-- `GET /products?search=`
+- [ ] `GET /products?search=`
   - Returns a list of product(s) with the given search keyword in its product name. Max of 50.
   - `search`: Search keyword.
     - e.g. `search=Textbook`
-- `GET /products/:id`
+- [ ] `GET /products/:id`
   - Returns a product with the given id.
   - `id`: Product id.
-- `POST /products`
+- [ ] `POST /products`
   - Creates a new product. (Not to be confused with increasing the product quantity)
-- `PUT /products/:id`
+- [ ] `PUT /products/:id`
   - Updates a product with the given id.
   - `id`: Product id.
-- `PUT /products/:id?increaseBy=`
+- [ ] `PUT /products/:id?increaseBy=`
   - Increases the product quantity by the given amount. Returns the product with the updated quantity.
   - `id`: Product id.
   - `increaseBy`: Integer representing the number of products to increase the quantity by.
-- `PUT /products/:id?decreaseBy=`
+- [ ] `PUT /products/:id?decreaseBy=`
   - Decreases the product quantity by the given amount. Returns the product with the updated quantity.
   - `id`: Product id.
   - `decreaseBy`: Integer representing the number of products to decrease the quantity by.
-- `DELETE /products/:id`
+- [ ] `DELETE /products/:id`
   - Deletes a product with the given id. (Not to be confused with decreasing the product quantity)
   - `id`: Product id.
