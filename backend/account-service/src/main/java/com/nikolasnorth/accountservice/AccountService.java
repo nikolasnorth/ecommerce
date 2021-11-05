@@ -4,9 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 public class AccountService {
 
@@ -17,8 +14,8 @@ public class AccountService {
     this.accountRepository = accountRepository;
   }
 
-  public List<Account> getAccounts() {
-    return accountRepository.findAll();
+  public Account getAccount(int id) {
+    return accountRepository.findById(id).orElseThrow();
   }
 
   public void createAccount(Account account) {

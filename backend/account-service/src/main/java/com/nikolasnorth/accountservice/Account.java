@@ -19,8 +19,6 @@ public class Account {
 
   private String name;
 
-  private int rating;
-
   @CreatedDate
   private LocalDate createdAt;
 
@@ -30,19 +28,17 @@ public class Account {
   protected Account() {
   }
 
-  public Account(int id, String email, String name, int rating, LocalDate createdAt, LocalDate updatedAt) {
+  public Account(int id, String email, String name, int avgRating, LocalDate createdAt, LocalDate updatedAt) {
     this.id = id;
     this.email = email;
     this.name = name;
-    this.rating = rating;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
 
-  public Account(String email, String name, int rating) {
+  public Account(String email, String name, int avgRating) {
     this.email = email;
     this.name = name;
-    this.rating = rating;
   }
 
   public int getId() {
@@ -69,14 +65,6 @@ public class Account {
     this.name = name;
   }
 
-  public int getRating() {
-    return rating;
-  }
-
-  public void setRating(int rating) {
-    this.rating = rating;
-  }
-
   public LocalDate getCreatedAt() {
     return createdAt;
   }
@@ -99,7 +87,6 @@ public class Account {
       "id=" + id +
       ", email='" + email + '\'' +
       ", name='" + name + '\'' +
-      ", rating=" + rating +
       ", createdAt=" + createdAt +
       ", updatedAt=" + updatedAt +
       '}';

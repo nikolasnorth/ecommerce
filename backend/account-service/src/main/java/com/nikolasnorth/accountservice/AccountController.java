@@ -3,8 +3,6 @@ package com.nikolasnorth.accountservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/accounts")
 public class AccountController {
@@ -16,9 +14,9 @@ public class AccountController {
     this.accountService = accountService;
   }
 
-  @GetMapping()
-  public List<Account> index() {
-    return accountService.getAccounts();
+  @GetMapping("{id}")
+  public Account getAccount(@PathVariable("id") int id) {
+    return accountService.getAccount(id);
   }
 
   @PostMapping()
@@ -26,7 +24,7 @@ public class AccountController {
     accountService.createAccount(account);
   }
 
-  @DeleteMapping(path = "{id}")
+  @DeleteMapping("{id}")
   public void deleteAccount(@PathVariable("id") int id) {
     try {
       accountService.deleteAccount(id);
