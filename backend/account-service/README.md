@@ -2,10 +2,10 @@
 
 ## API
 
-- [ ] `GET /accounts/:id`
+- [x] `GET /accounts/:id`
   - Returns an account with the given id.
   - `id`: Account id.
-- [ ] `POST /accounts`
+- [x] `POST /accounts`
   - Creates a new account.
 - [ ] `PUT /accounts/:id`
   - Updates an account with the given id.
@@ -14,7 +14,7 @@
   - Calculates a new average rating incorporating the given value. Returns the account with the rating updated.
   - `id`: Account id
   - `addRating`: New rating to be incorporated into the account's total average
-- [ ] `DELETE /accounts/:id`
+- [x] `DELETE /accounts/:id`
   - Deletes an account with the given id.
   - `id`: Account id
 
