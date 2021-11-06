@@ -1,9 +1,12 @@
 package com.nikolasnorth.accountservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.NoSuchElementException;
@@ -40,6 +43,25 @@ public class AccountService {
         String.format("An account with email '%s' already exists.", account.getEmail()));
     }
     return accountRepository.save(account);
+  }
+
+  public Account updateAccount(int id, Account updated) {
+    try {
+      Account existing = accountRepository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Account with id '%d' does not exist", id)));
+      if (updated.getName() != null && !updated.getName().isEmpty() && !updated.getName().equals(existing.getName())) {
+        existing.setName(updated.getName());
+      }
+      if (updated.getEmail() != null
+        && !updated.getEmail().isEmpty()
+        && !updated.getEmail().equals(existing.getEmail())
+      ) {
+        existing.setEmail(updated.getEmail());
+      }
+      return accountRepository.save(existing);
+    } catch (DataIntegrityViolationException e) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Email is already registered with an account.", e);
+    }
   }
 
   public void deleteAccount(int id) {

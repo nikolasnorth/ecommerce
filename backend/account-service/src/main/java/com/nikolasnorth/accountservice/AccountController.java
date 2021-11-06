@@ -27,6 +27,11 @@ public class AccountController {
     return ResponseEntity.ok(Map.of("account", accountService.createAccount(account)));
   }
 
+  @PutMapping("{id}")
+  public ResponseEntity<Map<String, Account>> updateAccount(@PathVariable("id") int id, @RequestBody Account account) {
+    return ResponseEntity.ok(Map.of("account", accountService.updateAccount(id, account)));
+  }
+
   @DeleteMapping("{id}")
   public void deleteAccount(@PathVariable("id") int id) {
     accountService.deleteAccount(id);
