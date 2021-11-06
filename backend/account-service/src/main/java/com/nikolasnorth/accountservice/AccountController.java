@@ -28,7 +28,9 @@ public class AccountController {
   }
 
   @DeleteMapping("{id}")
-  public void deleteAccount(@PathVariable("id") int id) {
+  public ResponseEntity<Map<String, Account>> deleteAccount(@PathVariable("id") int id) {
+    final var account = accountService.getAccount(id);
     accountService.deleteAccount(id);
+    return ResponseEntity.ok(Map.of("account", account));
   }
 }

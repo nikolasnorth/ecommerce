@@ -15,6 +15,6 @@
   - `id`: Account id
   - `addRating`: New rating to be incorporated into the account's total average
 - [x] `DELETE /accounts/:id`
-  - Deletes an account with the given id.
+  - Deletes and returns an account with the given id.
   - `id`: Account id
 
