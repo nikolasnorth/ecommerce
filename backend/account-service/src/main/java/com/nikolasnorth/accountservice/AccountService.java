@@ -2,7 +2,11 @@ package com.nikolasnorth.accountservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.NoSuchElementException;
 
 @Service
 public class AccountService {
@@ -15,7 +19,11 @@ public class AccountService {
   }
 
   public Account getAccount(int id) {
-    return accountRepository.findById(id).orElseThrow();
+    try {
+      return accountRepository.findById(id).orElseThrow();
+    } catch (NoSuchElementException e) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Account with id '%d' does not exist.", id), e);
+    }
   }
 
   public void createAccount(Account account) {
@@ -28,7 +36,8 @@ public class AccountService {
   public void deleteAccount(int id) {
     try {
       accountRepository.deleteById(id);
-    } catch (EmptyResultDataAccessException ignored) {
+    } catch (EmptyResultDataAccessException e) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Account with id '%d' does not exist", id) ,e);
     }
   }
 }

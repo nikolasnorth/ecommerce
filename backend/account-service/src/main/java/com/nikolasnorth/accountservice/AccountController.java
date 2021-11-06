@@ -1,7 +1,10 @@
 package com.nikolasnorth.accountservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/accounts")
@@ -15,8 +18,8 @@ public class AccountController {
   }
 
   @GetMapping("{id}")
-  public Account getAccount(@PathVariable("id") int id) {
-    return accountService.getAccount(id);
+  public ResponseEntity<Map<String, Account>> getAccount(@PathVariable("id") int id) {
+    return ResponseEntity.ok(Map.of("account", accountService.getAccount(id)));
   }
 
   @PostMapping()
@@ -26,9 +29,6 @@ public class AccountController {
 
   @DeleteMapping("{id}")
   public void deleteAccount(@PathVariable("id") int id) {
-    try {
-      accountService.deleteAccount(id);
-    } catch (IllegalArgumentException ignored) {
-    }
+    accountService.deleteAccount(id);
   }
 }
