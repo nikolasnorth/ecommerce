@@ -23,14 +23,12 @@ public class AccountController {
   }
 
   @PostMapping()
-  public void createAccount(@RequestBody Account account) {
-    accountService.createAccount(account);
+  public ResponseEntity<Map<String, Account>> createAccount(@RequestBody Account account) {
+    return ResponseEntity.ok(Map.of("account", accountService.createAccount(account)));
   }
 
   @DeleteMapping("{id}")
-  public ResponseEntity<Map<String, Account>> deleteAccount(@PathVariable("id") int id) {
-    final var account = accountService.getAccount(id);
+  public void deleteAccount(@PathVariable("id") int id) {
     accountService.deleteAccount(id);
-    return ResponseEntity.ok(Map.of("account", account));
   }
 }

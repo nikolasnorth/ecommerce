@@ -6,7 +6,7 @@
   - Returns an account with the given id.
   - `id`: Account id.
 - [x] `POST /accounts`
-  - Creates a new account.
+  - Creates and returns a new account.
 - [ ] `PUT /accounts/:id`
   - Updates an account with the given id.
   - `id`: Account id
@@ -15,6 +15,6 @@
   - `id`: Account id
   - `addRating`: New rating to be incorporated into the account's total average
 - [x] `DELETE /accounts/:id`
-  - Deletes and returns an account with the given id.
+  - Deletes an account with the given id.
   - `id`: Account id
 

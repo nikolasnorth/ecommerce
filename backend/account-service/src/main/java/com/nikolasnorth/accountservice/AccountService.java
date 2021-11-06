@@ -26,11 +26,11 @@ public class AccountService {
     }
   }
 
-  public void createAccount(Account account) {
+  public Account createAccount(Account account) {
     if (accountRepository.findByEmail(account.getEmail()).isPresent()) {
       throw new IllegalArgumentException(String.format("An account with email '%s' already exists.", account.getEmail()));
     }
-    accountRepository.save(account);
+    return accountRepository.save(account);
   }
 
   public void deleteAccount(int id) {
