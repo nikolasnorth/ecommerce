@@ -27,8 +27,17 @@ public class AccountService {
   }
 
   public Account createAccount(Account account) {
+    if (account.getEmail() == null
+      || account.getEmail().length() == 0
+      || account.getName() == null
+      || account.getName().length() == 0
+    ) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email and name fields are required.");
+    }
     if (accountRepository.findByEmail(account.getEmail()).isPresent()) {
-      throw new IllegalArgumentException(String.format("An account with email '%s' already exists.", account.getEmail()));
+      throw new ResponseStatusException(
+        HttpStatus.BAD_REQUEST,
+        String.format("An account with email '%s' already exists.", account.getEmail()));
     }
     return accountRepository.save(account);
   }
@@ -37,7 +46,7 @@ public class AccountService {
     try {
       accountRepository.deleteById(id);
     } catch (EmptyResultDataAccessException e) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Account with id '%d' does not exist", id) ,e);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Account with id '%d' does not exist", id), e);
     }
   }
 }
