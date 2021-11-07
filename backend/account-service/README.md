@@ -7,7 +7,7 @@
   - `id`: Account id.
 - [x] `POST /accounts`
   - Creates and returns a new account.
-- [ ] `PUT /accounts/:id`
+- [x] `PUT /accounts/:id`
   - Updates an account with the given id.
   - `id`: Account id
 - [ ] `PUT /accounts/:id?addRating=`
