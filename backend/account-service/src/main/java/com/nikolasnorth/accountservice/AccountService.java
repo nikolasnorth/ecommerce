@@ -2,11 +2,9 @@ package com.nikolasnorth.accountservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.NoSuchElementException;
@@ -38,9 +36,7 @@ public class AccountService {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email and name fields are required.");
     }
     if (accountRepository.findByEmail(account.getEmail()).isPresent()) {
-      throw new ResponseStatusException(
-        HttpStatus.BAD_REQUEST,
-        String.format("An account with email '%s' already exists.", account.getEmail()));
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Email is already registered with an account.");
     }
     return accountRepository.save(account);
   }

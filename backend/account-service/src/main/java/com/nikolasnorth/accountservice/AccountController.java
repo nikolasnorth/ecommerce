@@ -1,6 +1,7 @@
 package com.nikolasnorth.accountservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class AccountController {
 
   @PostMapping()
   public ResponseEntity<Map<String, Account>> createAccount(@RequestBody Account account) {
-    return ResponseEntity.ok(Map.of("account", accountService.createAccount(account)));
+    return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("account", accountService.createAccount(account)));
   }
 
   @PutMapping("{id}")
