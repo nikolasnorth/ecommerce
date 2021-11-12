@@ -1,4 +1,4 @@
-package com.nikolasnorth.authservice.account;
+package com.nikolasnorth.authservice;
 
 import java.time.LocalDate;
 
@@ -23,6 +23,11 @@ public class Account {
     this.name = name;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
+  }
+
+  public Account(String email, String name) {
+    this.email = email;
+    this.name = name;
   }
 
   public int getId() {
@@ -63,5 +68,16 @@ public class Account {
 
   public void setUpdatedAt(LocalDate updatedAt) {
     this.updatedAt = updatedAt;
+  }
+
+  @Override
+  public String toString() {
+    return "Account{" +
+      "id=" + id +
+      ", email='" + email + '\'' +
+      ", name='" + name + '\'' +
+      ", createdAt=" + createdAt +
+      ", updatedAt=" + updatedAt +
+      '}';
   }
 }
