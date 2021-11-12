@@ -5,6 +5,9 @@
 - [x] `GET /accounts/:id`
   - Returns an account with the given id.
   - `id`: Account id.
+- [ ] `GET /accounts?email=`
+  - Returns an account with the given email.
+  - `email`: Account email
 - [x] `POST /accounts`
   - Creates and returns a new account.
 - [x] `PUT /accounts/:id`
@@ -17,4 +20,4 @@
 - [x] `DELETE /accounts/:id`
   - Deletes an account with the given id.
   - `id`: Account id
-
+  
