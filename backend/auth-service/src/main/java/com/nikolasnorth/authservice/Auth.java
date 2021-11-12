@@ -3,7 +3,7 @@ package com.nikolasnorth.authservice;
 import javax.persistence.*;
 
 @Entity
-public class Session {
+public class Auth {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,17 +15,22 @@ public class Session {
   @Column(nullable = false)
   private boolean isValid = true;
 
-  protected Session() {
+  @Column(nullable = false)
+  private String password;
+
+  protected Auth() {
   }
 
-  public Session(int id, int accountId, boolean isValid) {
+  public Auth(int id, int accountId, boolean isValid, String password) {
     this.id = id;
     this.accountId = accountId;
     this.isValid = isValid;
+    this.password = password;
   }
 
-  public Session(int accountId) {
+  public Auth(int accountId, String password) {
     this.accountId = accountId;
+    this.password = password;
   }
 
   public int getId() {
@@ -50,5 +55,13 @@ public class Session {
 
   public void setValid(boolean valid) {
     isValid = valid;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 }
