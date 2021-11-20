@@ -18,13 +18,13 @@ export async function getServerSideProps(): Promise<GetServerSidePropsResult<Mar
 export default function Marketplace({products}: MarketplaceProps) {
   return (
     <>
-      <header>
+      <header className="mb-12">
         <h3 className="text-3xl font-semibold">Mustang</h3>
       </header>
       <div className="grid gap-4 grid-cols-3 justify-items-stretch min-h-screen">
         {products?.map(product => {
           return (
-            <div key={product.id}>
+            <div key={product.id} className="bg-gray-700 rounded-lg p-4">
               <p>{product.title}</p>
               <p>{product.price}</p>
             </div>
