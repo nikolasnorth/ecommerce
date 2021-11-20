@@ -2,11 +2,11 @@ import {GetServerSidePropsResult} from "next";
 import {Product} from "@types";
 import ProductCard from "@components/ProductCard";
 
-interface MarketplaceProps {
+interface MarketplacePageProps {
   products: Product[];
 }
 
-export async function getServerSideProps(): Promise<GetServerSidePropsResult<MarketplaceProps>> {
+export async function getServerSideProps(): Promise<GetServerSidePropsResult<MarketplacePageProps>> {
   const res = await fetch("https://fakestoreapi.com/products");
   const data = await res.json();
   return {
@@ -16,7 +16,7 @@ export async function getServerSideProps(): Promise<GetServerSidePropsResult<Mar
   };
 }
 
-export default function Marketplace({products}: MarketplaceProps) {
+export default function Marketplace({products}: MarketplacePageProps) {
   return (
     <>
       <header className="mb-12">
