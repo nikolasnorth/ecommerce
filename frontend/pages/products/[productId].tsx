@@ -28,7 +28,7 @@ export default function ProductPage({product}: ProductPageProps) {
     <div className="min-h-screen">
       <h3>{product?.title}</h3>
       <p>{product?.price}</p>
-      <Link href={"/marketplace"}>
+      <Link href={"/thank-you"}>
         <a>Buy</a>
       </Link>
     </div>
