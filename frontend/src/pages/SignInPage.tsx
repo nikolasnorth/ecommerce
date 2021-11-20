@@ -1,15 +1,22 @@
 import { useState } from "react";
+import { useAuth } from "../hooks/AuthProvider";
 
 export default function SignInPage() {
+  const auth = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  function onClickSignIn(event: any) {
-    event.preventDefault();
-    if (!email || !password) {
-      alert("All fields are required.");
-    } else {
-      alert("Signed Up!");
+  async function onClickSignIn(event: any) {
+    try {
+      event.preventDefault();
+      if (!email || !password) {
+        alert("All fields are required.");
+      } else {
+        await auth.signIn(email, password);
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Something went wrong. Please try again later.");
     }
   }
 

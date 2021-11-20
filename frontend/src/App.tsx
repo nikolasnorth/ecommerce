@@ -6,19 +6,48 @@ import SignUpPage from "./pages/SignUpPage";
 import MarketPlacePage from "./pages/MarketPlacePage";
 import PostProductPage from "./pages/PostProductPage";
 import AccountPage from "./pages/AccountPage";
-import NotFoundPage from "./pages/NotFoundPage";
+import { useEffect, useState } from "react";
+import { Account } from "./types";
+import ProtectedRoute from "./components/ProtectedRoute";
+import AuthProvider from "./hooks/AuthProvider";
 
 function App() {
+  const [isLoading, setLoading] = useState(true);
+  let account: Account | null = null;
+
+  useEffect(() => {
+    // When application is first launched, check to see if the user is already logged in by
+    // querying localStorage for a cached account.
+    try {
+      const accountString = localStorage.getItem("account");
+      if (accountString) {
+        account = JSON.parse(accountString) as Account;
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  if (isLoading) {
+    return (
+      <main className="flex h-screen justify-center items-center">
+        <p>Loading...</p>
+      </main>
+    );
+  }
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact={true} path={"/"} component={LandingPage}/>
-        <Route path={"/signin"} component={SignInPage}/>
-        <Route path={"/signup"} component={SignUpPage}/>
-        <Route path={"/market"} component={MarketPlacePage}/>
-        <Route path={"/post"} component={PostProductPage}/>
-        <Route path={"/account"} component={AccountPage}/>
-        <Route path={"/"} component={NotFoundPage}/>
+        <AuthProvider cachedAccount={account}>
+          <Route exact path={"/"} component={LandingPage}/>
+          <Route path={"/signin"} component={SignInPage}/>
+          <Route path={"/signup"} component={SignUpPage}/>
+          <ProtectedRoute path={"/market"} component={MarketPlacePage}/>
+          <ProtectedRoute path={"/post"} component={PostProductPage}/>
+          <ProtectedRoute path={"/account"} component={AccountPage}/>
+        </AuthProvider>
       </Switch>
     </BrowserRouter>
   );

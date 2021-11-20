@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Account } from "../types";
 
 export default function AccountPage() {
-  const fakeAccount: Account = { id: 1, name: "Nikolas", email: "nikolas@uwo.ca" };
+  const fakeAccount: Account = { id: 1, name: "Nikolas", email: "nikolas@uwo.ca", password: "123" };
   const [email, setEmail] = useState(fakeAccount.email);
   const [name, setName] = useState(fakeAccount.name);
   const [isUpdateButtonDisabled, setUpdateButtonDisabled] = useState(true);

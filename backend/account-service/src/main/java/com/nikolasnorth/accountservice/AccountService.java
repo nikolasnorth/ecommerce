@@ -7,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.NoSuchElementException;
-
 @Service
 public class AccountService {
 
@@ -19,12 +17,17 @@ public class AccountService {
     this.accountRepository = accountRepository;
   }
 
-  public Account getAccount(int id) {
-    try {
-      return accountRepository.findById(id).orElseThrow();
-    } catch (NoSuchElementException e) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Account with id '%d' does not exist.", id), e);
+  public Account getAccountByEmail(String email) {
+    if (email == null) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is required.");
     }
+    return accountRepository.findByEmail(email)
+      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist."));
+  }
+
+  public Account getAccount(int id) {
+    return accountRepository.findById(id)
+      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist."));
   }
 
   public Account createAccount(Account account) {

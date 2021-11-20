@@ -30,8 +30,8 @@ public class AuthController {
   }
 
   @PostMapping("signin")
-  public ResponseEntity<Map<String, Account>> signIn(@RequestBody Account account) {
-    return ResponseEntity.ok(Map.of("entity", sessionService.signIn(account)));
+  public ResponseEntity<Map<String, Account>> signIn(@RequestBody Map<String, String> req) {
+    return ResponseEntity.ok(Map.of("account", sessionService.signIn(req.get("email"), req.get("password"))));
   }
 
   @GetMapping("signout")

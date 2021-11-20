@@ -18,9 +18,14 @@ public class AccountController {
     this.accountService = accountService;
   }
 
+  @GetMapping()
+  public ResponseEntity<Account> getAccount(@RequestParam String email) {
+    return ResponseEntity.ok(accountService.getAccountByEmail(email));
+  }
+
   @GetMapping("{id}")
-  public ResponseEntity<Map<String, Account>> getAccount(@PathVariable("id") int id) {
-    return ResponseEntity.ok(Map.of("account", accountService.getAccount(id)));
+  public ResponseEntity<Account> getAccount(@PathVariable("id") int id) {
+    return ResponseEntity.ok(accountService.getAccount(id));
   }
 
   @PostMapping()

@@ -64,4 +64,14 @@ public class Auth {
   public void setPassword(String password) {
     this.password = password;
   }
+
+  @Override
+  public String toString() {
+    return "Auth{" +
+      "id=" + id +
+      ", accountId=" + accountId +
+      ", isValid=" + isValid +
+      ", password='" + password + '\'' +
+      '}';
+  }
 }

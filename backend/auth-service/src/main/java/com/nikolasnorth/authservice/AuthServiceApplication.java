@@ -1,5 +1,7 @@
 package com.nikolasnorth.authservice;
 
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -15,5 +17,10 @@ public class AuthServiceApplication {
 	@Bean
 	public WebClient.Builder webClientBuilder() {
 		return WebClient.builder();
+	}
+
+	@Bean
+	public JwtBuilder jwtBuilder() {
+		return Jwts.builder();
 	}
 }
