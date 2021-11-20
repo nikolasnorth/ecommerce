@@ -20,7 +20,12 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@components/*": ["components/*"]
+      "@components/*": [
+        "components/*"
+      ],
+      "@types": [
+        "types.ts"
+      ]
     }
   },
   "include": [
