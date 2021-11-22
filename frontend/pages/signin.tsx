@@ -1,13 +1,16 @@
 import { ChangeEvent } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function SignInPage() {
+  const router = useRouter();
 
   async function signInUser(event: ChangeEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!event.target["email"] || !event.target["password"]) {
       alert("Email and password are required.");
     }
+    await router.replace("/marketplace");
   }
 
   return (

@@ -1,13 +1,16 @@
 import { ChangeEvent } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function SignUpPage() {
+  const router = useRouter();
 
   async function signUpUser(event: ChangeEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!event.target["email"] || !event.target["password"] || !event.target["confirmPassword"]) {
       alert("All fields are required.");
     }
+    await router.replace("/marketplace");
   }
 
   return (
