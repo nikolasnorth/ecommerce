@@ -3,35 +3,36 @@ package com.nikolasnorth.authservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
 
-import java.time.LocalDate;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
-  private final AuthService sessionService;
-
-  private final WebClient.Builder client;
+  private final AuthService authService;
 
   @Autowired
-  public AuthController(AuthService s, WebClient.Builder w) {
-    this.sessionService = s;
-    this.client = w;
+  public AuthController(AuthService s) {
+    this.authService = s;
   }
 
   @PostMapping("signup")
-  public ResponseEntity<Map<String, Account>> signUp(@RequestBody Account account) {
-    final var created = new Account(1, "new.entity@uwo.ca", "New Account Name", LocalDate.now(), LocalDate.now());
-    final Map<String, Account> res = Map.of("entity", created);
-    return ResponseEntity.ok(res);
+  public ResponseEntity<Account> signUp(@RequestBody Map<String, String> req, HttpServletResponse res) {
+    final Account account = new Account(req.get("email"), req.get("name"));
+    final Account created = authService.signUp(account, req.get("password"));
+    final Cookie accessTokenCookie = authService.createAccessTokenCookie(Integer.toString(created.getId()));
+    final Cookie refreshTokenCookie = authService.createRefreshTokenCookie(Integer.toString(created.getId()));
+    res.addCookie(accessTokenCookie);
+    res.addCookie(refreshTokenCookie);
+    return ResponseEntity.ok(created);
   }
 
   @PostMapping("signin")
   public ResponseEntity<Map<String, Account>> signIn(@RequestBody Map<String, String> req) {
-    return ResponseEntity.ok(Map.of("account", sessionService.signIn(req.get("email"), req.get("password"))));
+    return ResponseEntity.ok(Map.of("account", authService.signIn(req.get("email"), req.get("password"))));
   }
 
   @GetMapping("signout")

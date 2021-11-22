@@ -24,12 +24,11 @@ public class Jwt implements Serializable {
     this.jwtBuilder = j;
   }
 
-  public String generateToken() {
-    final Map<String, Object> claims = Map.of();
+  public String generateToken(Map<String, Object> claims, String sub, int expiresInSeconds) {
     return jwtBuilder.setClaims(claims)
-      .setSubject("nikolas@uwo.ca")
+      .setSubject(sub)
       .setIssuedAt(Date.from(Instant.now()))
-      .setExpiration(Date.from(Instant.now().plusSeconds(300)))  // 5 minutes
+      .setExpiration(Date.from(Instant.now().plusSeconds(expiresInSeconds)))
       .signWith(SignatureAlgorithm.HS512, secretKey)
       .compact();
   }
