@@ -7,7 +7,7 @@ interface ProductCardProps {
 
 export default function ProductCard({product}: ProductCardProps) {
   return (
-    <div key={product?.id} className="bg-gray-700 rounded-lg p-4">
+    <div key={product?.id} className="bg-gray-300 rounded-lg p-4">
       <p>{product?.title}</p>
       <p>{product?.price}</p>
       <Link href={`/products/${product?.id}`}>

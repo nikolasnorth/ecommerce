@@ -8,7 +8,7 @@ export default function MyApp({Component, pageProps}: AppProps) {
       <Head>
         <title>Mustang</title>
       </Head>
-      <div className="bg-gray-900 h-full text-white p-4">
+      <div className="bg-gray-100 h-full p-4">
         <Component {...pageProps} />
       </div>
     </>
