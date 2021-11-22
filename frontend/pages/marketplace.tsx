@@ -1,22 +1,32 @@
-import {GetServerSidePropsResult} from "next";
-import {Product} from "@types";
+import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
+import { Product } from "@types";
 import ProductCard from "@components/ProductCard";
+import isAuthorized from "@util/isAuthorized";
 
 interface MarketplacePageProps {
   products: Product[];
 }
 
-export async function getServerSideProps(): Promise<GetServerSidePropsResult<MarketplacePageProps>> {
-  const res = await fetch("https://fakestoreapi.com/products");
-  const data = await res.json();
+export async function getServerSideProps(context: GetServerSidePropsContext)
+  : Promise<GetServerSidePropsResult<MarketplacePageProps>> {
+  if (!isAuthorized(context)) {
+    return {
+      redirect: {
+        destination: "/signin",
+        permanent: false,
+      }
+    };
+  }
+  const productsRes = await fetch("https://fakestoreapi.com/products");
+  const productData = await productsRes.json();
   return {
     props: {
-      products: data,
+      products: productData,
     }
   };
 }
 
-export default function Marketplace({products}: MarketplacePageProps) {
+export default function Marketplace({ products }: MarketplacePageProps) {
   return (
     <>
       <header className="mb-12">
