@@ -21,7 +21,7 @@ export default function SignInPage() {
                autoComplete="current-password" placeholder="Password" required
         />
         <br/>
-        <button type="submit">Sign Up</button>
+        <button type="submit">Sign In</button>
       </form>
     </div>
   );
