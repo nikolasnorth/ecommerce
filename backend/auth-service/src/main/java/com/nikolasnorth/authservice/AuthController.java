@@ -31,8 +31,13 @@ public class AuthController {
   }
 
   @PostMapping("signin")
-  public ResponseEntity<Map<String, Account>> signIn(@RequestBody Map<String, String> req) {
-    return ResponseEntity.ok(Map.of("account", authService.signIn(req.get("email"), req.get("password"))));
+  public ResponseEntity<Account> signIn(@RequestBody Map<String, String> req, HttpServletResponse res) {
+    final Account account = authService.signIn(req.get("email"), req.get("password"));
+    final Cookie accessTokenCookie = authService.createAccessTokenCookie(Integer.toString(account.getId()));
+    final Cookie refreshTokenCookie = authService.createRefreshTokenCookie(Integer.toString(account.getId()));
+    res.addCookie(accessTokenCookie);
+    res.addCookie(refreshTokenCookie);
+    return ResponseEntity.ok(account);
   }
 
   @GetMapping("signout")
