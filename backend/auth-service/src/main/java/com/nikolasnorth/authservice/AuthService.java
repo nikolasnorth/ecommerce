@@ -22,10 +22,10 @@ public class AuthService {
   }
 
   public Account signIn(String email, String password) {
+    if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email and password are required.");
+    }
     try {
-      if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email and password are required.");
-      }
       Account account = client.build()
         .get()
         .uri(String.format("http://localhost:8082/api/v1/accounts?email=%s", email))
@@ -33,7 +33,8 @@ public class AuthService {
         .bodyToMono(Account.class)
         .block();
       if (account == null) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist.");
+        System.err.println("Account was unexpectedly found to be null.");
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong on our end.");
       }
       return account;
     } catch (WebClientResponseException e) {
