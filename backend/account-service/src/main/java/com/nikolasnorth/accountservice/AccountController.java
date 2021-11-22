@@ -19,18 +19,18 @@ public class AccountController {
   }
 
   @GetMapping()
-  public ResponseEntity<Account> getAccount(@RequestParam String email) {
+  public ResponseEntity<Account> getAccountByEmail(@RequestParam String email) {
     return ResponseEntity.ok(accountService.getAccountByEmail(email));
   }
 
   @GetMapping("{id}")
-  public ResponseEntity<Account> getAccount(@PathVariable("id") int id) {
-    return ResponseEntity.ok(accountService.getAccount(id));
+  public ResponseEntity<Account> getAccountById(@PathVariable("id") int id) {
+    return ResponseEntity.ok(accountService.getAccountById(id));
   }
 
   @PostMapping()
-  public ResponseEntity<Map<String, Account>> createAccount(@RequestBody Account account) {
-    return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("account", accountService.createAccount(account)));
+  public ResponseEntity<Account> createAccount(@RequestBody Account account) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(accountService.createAccount(account));
   }
 
   @PutMapping("{id}")

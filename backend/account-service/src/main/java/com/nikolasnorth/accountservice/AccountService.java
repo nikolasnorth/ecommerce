@@ -25,7 +25,7 @@ public class AccountService {
       .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist."));
   }
 
-  public Account getAccount(int id) {
+  public Account getAccountById(int id) {
     return accountRepository.findById(id)
       .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist."));
   }
