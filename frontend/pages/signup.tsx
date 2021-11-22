@@ -1,4 +1,5 @@
 import { ChangeEvent } from "react";
+import Link from "next/link";
 
 export default function SignUpPage() {
 
@@ -10,8 +11,8 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <h3>Sign in</h3>
+    <div className="min-h-screen flex flex-col items-center justify-center">
+      <h3>Sign Up</h3>
       <form onSubmit={signUpUser}>
         <label htmlFor="email" className="hidden">Email</label>
         <input type="email" id="email" name="email" autoComplete="email" placeholder="Email" required/>
@@ -28,6 +29,7 @@ export default function SignUpPage() {
         <br/>
         <button type="submit">Sign Up</button>
       </form>
+      <small>Already have an account? <Link href={"/signin"}><a className="underline">Sign in</a></Link>.</small>
     </div>
   );
 }
