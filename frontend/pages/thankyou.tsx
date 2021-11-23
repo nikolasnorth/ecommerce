@@ -11,9 +11,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext)
       }
     };
   }
-  return {
-    props: {}
-  };
+  return { props: {} };
 }
 
 export default function PurchaseConfirmationPage() {

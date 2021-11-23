@@ -1,6 +1,21 @@
 import { ChangeEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
+import isAuthorized from "@util/isAuthorized";
+
+export async function getServerSideProps(context: GetServerSidePropsContext)
+  : Promise<GetServerSidePropsResult<unknown>> {
+  if (isAuthorized(context)) {
+    return {
+      redirect: {
+        destination: "/marketplace",
+        permanent: false,
+      }
+    };
+  }
+  return { props: {} };
+}
 
 export default function SignInPage() {
   const router = useRouter();
