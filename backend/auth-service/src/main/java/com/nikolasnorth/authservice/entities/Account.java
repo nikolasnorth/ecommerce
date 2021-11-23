@@ -1,4 +1,4 @@
-package com.nikolasnorth.authservice;
+package com.nikolasnorth.authservice.entities;
 
 import java.time.LocalDate;
 

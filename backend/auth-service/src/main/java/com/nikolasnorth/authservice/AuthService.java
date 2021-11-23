@@ -1,5 +1,7 @@
 package com.nikolasnorth.authservice;
 
+import com.nikolasnorth.authservice.entities.Account;
+import com.nikolasnorth.authservice.entities.AccountCookies;
 import com.nikolasnorth.authservice.util.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -10,7 +12,6 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 import javax.servlet.http.Cookie;
-import java.time.LocalDate;
 import java.util.HashMap;
 
 @Service
@@ -20,13 +21,16 @@ public class AuthService {
 
   private final Jwt jwt;
 
+  private final AuthRepository authRepository;
+
   @Autowired
-  public AuthService(WebClient.Builder w, Jwt jwt) {
+  public AuthService(WebClient.Builder w, Jwt jwt, AuthRepository a) {
     this.client = w;
     this.jwt = jwt;
+    this.authRepository = a;
   }
 
-  public Account signUp(Account account, String password) {
+  public AccountCookies signUp(Account account, String password) {
     if (account == null
       || account.getEmail() == null || account.getEmail().isEmpty()
       || account.getName() == null || account.getName().isEmpty()
@@ -35,7 +39,7 @@ public class AuthService {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "All fields are required.");
     }
     try {
-      final Account created = client.build()
+      final Account createdAccount = client.build()
         .post()
         .uri("http://localhost:8082/api/v1/accounts")
         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -43,11 +47,17 @@ public class AuthService {
         .retrieve()
         .bodyToMono(Account.class)
         .block();
-      if (created == null) {
+      if (createdAccount == null) {
         System.err.println("Account was unexpectedly found to be null.");
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong on our end.");
       }
-      return created;
+      final Auth auth = new Auth(createdAccount.getId(), password);
+      authRepository.save(auth);
+      return new AccountCookies(
+        createAccessTokenCookie(Integer.toString(createdAccount.getId())),
+        createRefreshTokenCookie(Integer.toString(createdAccount.getId())),
+        createdAccount
+      );
     } catch (WebClientResponseException e) {
       if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist.");
