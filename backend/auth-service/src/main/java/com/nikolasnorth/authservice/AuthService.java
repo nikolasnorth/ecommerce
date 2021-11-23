@@ -13,6 +13,7 @@ import reactor.core.publisher.Mono;
 
 import javax.servlet.http.Cookie;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 
 @Service
 public class AuthService {
@@ -69,7 +70,7 @@ public class AuthService {
     }
   }
 
-  public Account signIn(String email, String password) {
+  public AccountCookies signIn(String email, String password) {
     if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email and password are required.");
     }
@@ -84,13 +85,24 @@ public class AuthService {
         System.err.println("Account was unexpectedly found to be null.");
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong on our end.");
       }
-      return account;
+      final Auth auth = authRepository.findByAccountId(account.getId()).orElseThrow();
+      if (!password.equals(auth.getPassword())) {
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email and/or password did not match.");
+      }
+      return new AccountCookies(
+        createAccessTokenCookie(Integer.toString(account.getId())),
+        createRefreshTokenCookie(Integer.toString(account.getId())),
+        account
+      );
     } catch (WebClientResponseException e) {
       if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist.");
       } else {
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong during sign in.");
       }
+    } catch (NoSuchElementException e) {
+      System.err.println("Could not find account by id in Auth table.");
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist.");
     }
   }
 
