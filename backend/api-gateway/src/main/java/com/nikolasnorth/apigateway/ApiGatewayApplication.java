@@ -10,12 +10,14 @@ import org.springframework.context.annotation.Bean;
 public class ApiGatewayApplication {
 
   @Bean
-  public RouteLocator myRoutes(RouteLocatorBuilder builder) {
+  public RouteLocator gateway(RouteLocatorBuilder builder) {
     return builder.routes()
-      .route(p -> p
-        .path("/get")
-        .filters(f -> f.addRequestHeader("Hello", "World"))
-        .uri("http://httpbin.org:80"))
+      .route("account-service", p -> p
+        .path("/api/v1/accounts/*")
+        .uri("http://localhost:8082/"))
+      .route("auth-service", p -> p
+        .path("/api/v1/auth/*")
+        .uri("http://localhost:8085/"))
       .build();
   }
 

@@ -6,3 +6,9 @@ export interface Product {
   price: number;  // delete
   // priceInCents: number;
 }
+
+export interface Account {
+  id: number;
+  name: string;
+  email: string;
+}
