@@ -1,8 +1,14 @@
-package com.nikolasnorth.authservice;
+package com.nikolasnorth.authservice.auth;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Auth {
 
   @Id
@@ -18,14 +24,22 @@ public class Auth {
   @Column(nullable = false)
   private String password;
 
+  @CreatedDate
+  private LocalDate createdAt;
+
+  @LastModifiedDate
+  private LocalDate updatedAt;
+
   protected Auth() {
   }
 
-  public Auth(int id, int accountId, boolean isValid, String password) {
+  public Auth(int id, int accountId, boolean isValid, String password, LocalDate createdAt, LocalDate updatedAt) {
     this.id = id;
     this.accountId = accountId;
     this.isValid = isValid;
     this.password = password;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
   }
 
   public Auth(int accountId, String password) {
@@ -65,6 +79,14 @@ public class Auth {
     this.password = password;
   }
 
+  public LocalDate getCreatedAt() {
+    return createdAt;
+  }
+
+  public LocalDate getUpdatedAt() {
+    return updatedAt;
+  }
+
   @Override
   public String toString() {
     return "Auth{" +
@@ -72,6 +94,8 @@ public class Auth {
       ", accountId=" + accountId +
       ", isValid=" + isValid +
       ", password='" + password + '\'' +
+      ", createdAt=" + createdAt +
+      ", updatedAt=" + updatedAt +
       '}';
   }
 }

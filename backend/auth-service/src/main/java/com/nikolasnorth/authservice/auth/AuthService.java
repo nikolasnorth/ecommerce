@@ -1,4 +1,4 @@
-package com.nikolasnorth.authservice;
+package com.nikolasnorth.authservice.auth;
 
 import com.nikolasnorth.authservice.entities.Account;
 import com.nikolasnorth.authservice.entities.AccountCookies;
