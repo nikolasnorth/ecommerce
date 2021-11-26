@@ -3,6 +3,7 @@ package com.nikolasnorth.authservice;
 import com.nikolasnorth.authservice.entities.Account;
 import com.nikolasnorth.authservice.entities.AccountCookies;
 import com.nikolasnorth.authservice.util.Jwt;
+import com.nikolasnorth.aws.SNS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -56,6 +57,11 @@ public class AuthService {
       }
       final Auth auth = new Auth(createdAccount.getId(), password);
       authRepository.save(auth);
+      
+      // Publish account created message to aws topic
+   	  String arn = "arn:aws:sns:us-east-2:964806631323:AccountCreated";    // Address of SNS topic to publish to   		
+   	  SNS.publishToTopic(arn, createdAccount.getEmail());
+      
       return new AccountCookies(
         createAccessTokenCookie(Integer.toString(createdAccount.getId())),
         createRefreshTokenCookie(Integer.toString(createdAccount.getId())),
