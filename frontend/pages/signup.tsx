@@ -1,21 +1,15 @@
 import { ChangeEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
-import isAuthorized from "@util/isAuthorized";
+import { GetServerSideProps } from "next";
+import requireAuth from "@components/hoc/requireAuth";
 
-export async function getServerSideProps(context: GetServerSidePropsContext)
-  : Promise<GetServerSidePropsResult<unknown>> {
-  if (isAuthorized(context)) {
-    return {
-      redirect: {
-        destination: "/marketplace",
-        permanent: false,
-      }
-    };
-  }
-  return { props: {} };
-}
+export const getServerSideProps: GetServerSideProps = requireAuth(async () => {
+  console.log("Hello from server side props");
+  return {
+    props: {}
+  };
+});
 
 export default function SignUpPage() {
   const router = useRouter();
