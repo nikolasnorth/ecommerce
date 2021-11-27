@@ -3,8 +3,9 @@ package com.nikolasnorth.authservice.auth;
 import com.nikolasnorth.authservice.entities.Account;
 import com.nikolasnorth.authservice.entities.AccountCookies;
 import com.nikolasnorth.authservice.util.Jwt;
-import com.nikolasnorth.aws.SNS;
+import com.nikolasnorth.authservice.aws.SnsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,11 +28,17 @@ public class AuthService {
 
   private final AuthRepository authRepository;
 
+  private final SnsService snsService;
+
+  @Value("${sns.topic.arn}")
+  private String arn;
+
   @Autowired
-  public AuthService(WebClient.Builder w, Jwt jwt, AuthRepository a) {
+  public AuthService(WebClient.Builder w, Jwt jwt, AuthRepository a, SnsService sns) {
     this.client = w;
     this.jwt = jwt;
     this.authRepository = a;
+    this.snsService = sns;
   }
 
   public AccountCookies signUp(Account account, String password) {
@@ -57,11 +64,11 @@ public class AuthService {
       }
       final Auth auth = new Auth(createdAccount.getId(), password);
       authRepository.save(auth);
-      
+
       // Publish account created message to aws topic
-   	  String arn = "arn:aws:sns:us-east-2:964806631323:AccountCreated";    // Address of SNS topic to publish to   		
-   	  SNS.publishToTopic(arn, createdAccount.getEmail());
-      
+   	  // String arn = "arn:aws:sns:us-east-2:964806631323:AccountCreated";    // Address of SNS topic to publish to
+   	  snsService.publishToTopic(arn, createdAccount.getEmail());
+
       return new AccountCookies(
         createAccessTokenCookie(Integer.toString(createdAccount.getId())),
         createRefreshTokenCookie(Integer.toString(createdAccount.getId())),
