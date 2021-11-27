@@ -1,4 +1,4 @@
-package com.nikolasnorth.accountservice;
+package com.nikolasnorth.authservice.auth;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -9,14 +9,14 @@ import java.util.List;
 
 @Configuration
 @EnableJpaAuditing
-public class AccountConfig {
+public class AuthConfig {
 
   @Bean
-  CommandLineRunner runner(AccountRepository repo) {
+  CommandLineRunner runner(AuthRepository repo) {
     return args -> repo.saveAll(List.of(
-      new Account("nikolas@uwo.ca", "Nikolas", 80),
-      new Account("john.doe@uwo.ca", "John Doe", 71),
-      new Account("jane.doe@uwo.ca", "Jane Doe", 90)
+      new Auth(1, "password1"),
+      new Auth(2, "password2"),
+      new Auth(3, "password3")
     ));
   }
 }
