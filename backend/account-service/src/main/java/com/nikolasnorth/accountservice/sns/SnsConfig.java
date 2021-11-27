@@ -20,9 +20,6 @@ public class SnsConfig {
   @Value("${aws.secretKey}")
   private String awsSecretKey;
 
-  @Value("${aws.region}")
-  private String awsRegion;
-
   @Bean
   public AmazonSNS amazonSNS() {
     final var awsCredentialsProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsAccessKey, awsSecretKey));
