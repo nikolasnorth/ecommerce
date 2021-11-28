@@ -67,7 +67,7 @@ public class AuthService {
 
       // Publish account created message to aws topic
    	  // String arn = "arn:aws:sns:us-east-2:964806631323:AccountCreated";    // Address of SNS topic to publish to
-   	  snsService.publishToTopic(arn, createdAccount.getEmail());
+   	  snsService.publishToTopic(arn, "{\"service\": \"SignUp\", \"email\": \"" + createdAccount.getEmail() + "\"}");
 
       return new AccountCookies(
         createAccessTokenCookie(Integer.toString(createdAccount.getId())),
