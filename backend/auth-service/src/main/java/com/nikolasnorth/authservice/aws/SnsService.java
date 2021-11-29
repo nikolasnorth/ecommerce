@@ -32,7 +32,7 @@ public class SnsService {
 
   @Scheduled(fixedDelay = 15_000)  // 15 seconds
   public void publishHealthStatus() {
-    PublishResult res = amazonSns.publish(healthStatusTopicArn, "auth-service");
-    System.out.printf("Message ID: %s%n", res.getMessageId());
+//    PublishResult res = amazonSns.publish(healthStatusTopicArn, "auth-service");
+//    System.out.printf("Message ID: %s%n", res.getMessageId());
   }
 }

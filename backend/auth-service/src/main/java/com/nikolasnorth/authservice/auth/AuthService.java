@@ -1,9 +1,8 @@
 package com.nikolasnorth.authservice.auth;
 
-import com.nikolasnorth.authservice.entities.Account;
-import com.nikolasnorth.authservice.entities.AccountCookies;
-import com.nikolasnorth.authservice.util.Jwt;
 import com.nikolasnorth.authservice.aws.SnsService;
+import com.nikolasnorth.authservice.entities.Account;
+import com.nikolasnorth.authservice.util.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -15,7 +14,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
-import javax.servlet.http.Cookie;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 
@@ -41,7 +39,7 @@ public class AuthService {
     this.snsService = sns;
   }
 
-  public AccountCookies signUp(Account account, String password) {
+  public Account signUp(Account account, String password) {
     if (account == null
       || account.getEmail() == null || account.getEmail().isEmpty()
       || account.getName() == null || account.getName().isEmpty()
@@ -64,16 +62,9 @@ public class AuthService {
       }
       final Auth auth = new Auth(createdAccount.getId(), password);
       authRepository.save(auth);
-
       // Publish account created message to aws topic
-   	  // String arn = "arn:aws:sns:us-east-2:964806631323:AccountCreated";    // Address of SNS topic to publish to
    	  snsService.publishToTopic(arn, createdAccount.getEmail());
-
-      return new AccountCookies(
-        createAccessTokenCookie(Integer.toString(createdAccount.getId())),
-        createRefreshTokenCookie(Integer.toString(createdAccount.getId())),
-        createdAccount
-      );
+      return createdAccount;
     } catch (WebClientResponseException e) {
       if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist.");
@@ -85,7 +76,7 @@ public class AuthService {
     }
   }
 
-  public AccountCookies signIn(String email, String password) {
+  public Account signIn(String email, String password) {
     if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email and password are required.");
     }
@@ -104,11 +95,7 @@ public class AuthService {
       if (!password.equals(auth.getPassword())) {
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email and/or password did not match.");
       }
-      return new AccountCookies(
-        createAccessTokenCookie(Integer.toString(account.getId())),
-        createRefreshTokenCookie(Integer.toString(account.getId())),
-        account
-      );
+      return account;
     } catch (WebClientResponseException e) {
       if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist.");
@@ -125,17 +112,11 @@ public class AuthService {
     System.out.printf("Account %d has signed out!%n", account.getId());
   }
 
-  public Cookie createAccessTokenCookie(String subject) {
-    final var cookie
-      = new Cookie("access-token", jwt.generateToken(new HashMap<>(), subject, 300));  // expires in 5 minutes
-    cookie.setHttpOnly(true);
-    return cookie;
+  public String createAccessToken(String subject) {
+    return jwt.generateToken(new HashMap<>(), subject, 300);  // expires in 5 minutes
   }
 
-  public Cookie createRefreshTokenCookie(String subject) {
-    final var cookie
-      = new Cookie("refresh-token", jwt.generateToken(new HashMap<>(), subject, 31_536_000));  // expires in 1 year
-    cookie.setHttpOnly(true);
-    return cookie;
+  public String createRefreshToken(String subject) {
+    return jwt.generateToken(new HashMap<>(), subject, 31_536_000);  // expires in 1 year
   }
 }

@@ -1,7 +1,6 @@
 package com.nikolasnorth.authservice.auth;
 
 import com.nikolasnorth.authservice.entities.Account;
-import com.nikolasnorth.authservice.entities.AccountCookies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,20 +20,24 @@ public class AuthController {
   }
 
   @PostMapping("signup")
-  public ResponseEntity<Account> signUp(@RequestBody Map<String, String> req, HttpServletResponse res) {
+  public ResponseEntity<Map<String, Object>> signUp(@RequestBody Map<String, String> req, HttpServletResponse res) {
     final Account account = new Account(req.get("email"), req.get("name"));
-    final AccountCookies accountCookies = authService.signUp(account, req.get("password"));
-    res.addCookie(accountCookies.getAccessTokenCookie());
-    res.addCookie(accountCookies.getRefreshTokenCookie());
-    return ResponseEntity.ok(accountCookies.getAccount());
+    final Account createdAccount = authService.signUp(account, req.get("password"));
+    return ResponseEntity.ok(Map.of(
+      "account", createdAccount,
+      "accessToken", authService.createAccessToken(Integer.toString(createdAccount.getId())),
+      "refreshToken", authService.createRefreshToken(Integer.toString(createdAccount.getId()))
+    ));
   }
 
   @PostMapping("signin")
-  public ResponseEntity<Account> signIn(@RequestBody Map<String, String> req, HttpServletResponse res) {
-    final AccountCookies accountCookies = authService.signIn(req.get("email"), req.get("password"));
-    res.addCookie(accountCookies.getAccessTokenCookie());
-    res.addCookie(accountCookies.getRefreshTokenCookie());
-    return ResponseEntity.ok(accountCookies.getAccount());
+  public ResponseEntity<Map<String, Object>> signIn(@RequestBody Map<String, String> req, HttpServletResponse res) {
+    final Account account = authService.signIn(req.get("email"), req.get("password"));
+    return ResponseEntity.ok(Map.of(
+      "account", account,
+      "accessToken", authService.createAccessToken(Integer.toString(account.getId())),
+      "refreshToken", authService.createRefreshToken(Integer.toString(account.getId()))
+    ));
   }
 
   @GetMapping("signout")
