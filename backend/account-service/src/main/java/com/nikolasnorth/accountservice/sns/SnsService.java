@@ -22,7 +22,7 @@ public class SnsService {
 
   @Scheduled(fixedDelay = 15_000)  // 15 seconds
   public void publish() {
-    PublishResult res = amazonSns.publish(snsTopicArn, "account-service");
-    System.out.printf("Message ID: %s%n", res.getMessageId());
+//    PublishResult res = amazonSns.publish(snsTopicArn, "account-service");
+//    System.out.printf("Message ID: %s%n", res.getMessageId());
   }
 }
