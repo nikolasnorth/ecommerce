@@ -1,7 +1,5 @@
 package com.nikolasnorth.apigateway.filters;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,10 +37,15 @@ public class JwtFilterFactory extends AbstractGatewayFilterFactory<JwtFilterFact
         return exchange.getResponse().setComplete();
       }
 
-      final Jws<Claims> accessJwt = Jwts.parserBuilder()
+      try {
+        Jwts.parserBuilder()
         .setSigningKey(Keys.hmacShaKeyFor(jwtSecret))
         .build()
         .parseClaimsJws(splitAccessToken[1]);
+      } catch (Exception e) {
+        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+        return exchange.getResponse().setComplete();
+      }
 
       return chain.filter(exchange);
     });
