@@ -1,7 +1,6 @@
 package com.nikolasnorth.apigateway;
 
 import com.nikolasnorth.apigateway.filters.JwtFilterFactory;
-import com.nikolasnorth.apigateway.filters.RouteLookupFilterFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.RouteLocator;
@@ -29,11 +28,7 @@ public class ApiGatewayRouteLocator {
   }
 
   @Bean
-  public RouteLocator gateway(
-    RouteLocatorBuilder builder,
-    JwtFilterFactory jwtFilterFactory,
-    RouteLookupFilterFactory routeLookupFilterFactory
-  ) {
+  public RouteLocator gateway(RouteLocatorBuilder builder, JwtFilterFactory jwtFilterFactory) {
     return builder.routes()
       .route(ECommerceService.ACCOUNT.label, p -> p
         .path("/api/v1/accounts")
