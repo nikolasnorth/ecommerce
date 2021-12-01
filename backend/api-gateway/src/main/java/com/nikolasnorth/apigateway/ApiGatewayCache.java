@@ -16,9 +16,31 @@ public class ApiGatewayCache {
 
   private final Map<ECommerceService, String> serviceUris;
 
+  private final RestTemplate restTemplate;
+
+  private final String serviceRegistryUrl;
+
   @Autowired
   public ApiGatewayCache(RestTemplate restTemplate, @Value("${serviceRegistry.url}") String serviceRegistryUrl) {
     this.serviceUris = new HashMap<>();
+    this.restTemplate = restTemplate;
+    this.serviceRegistryUrl = serviceRegistryUrl;
+    refresh();
+  }
+
+  public Optional<String> get(ECommerceService service) {
+    return Optional.of(serviceUris.get(service));
+  }
+
+  public void put(ECommerceService service, String uri) {
+    serviceUris.put(service, uri);
+  }
+
+  public void remove(ECommerceService service) {
+    serviceUris.remove(service);
+  }
+
+  private void refresh() {
     ECommerceService[] services = ECommerceService.values();
     for (ECommerceService service : services) {
       final ResponseEntity<ServiceRegistryResponseBody> res
@@ -34,17 +56,5 @@ public class ApiGatewayCache {
       }
       this.put(service, body.getServiceLocation());
     }
-  }
-
-  public Optional<String> get(ECommerceService service) {
-    return Optional.of(serviceUris.get(service));
-  }
-
-  public void put(ECommerceService service, String uri) {
-    serviceUris.put(service, uri);
-  }
-
-  public void remove(ECommerceService service) {
-    serviceUris.remove(service);
   }
 }
