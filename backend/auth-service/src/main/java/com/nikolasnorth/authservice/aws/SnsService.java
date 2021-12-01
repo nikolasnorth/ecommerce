@@ -13,15 +13,23 @@ public class SnsService {
 
   private final AmazonSNS amazonSns;
 
-  @Value("${sns.topic.arn}")
-  private String healthStatusTopicArn;
+  private final String healthStatusTopicArn;
 
-  @Value("${baseurl}")
-  private String baseUrl;
+  private final String baseUrl;
+
+  private final Integer port;
 
   @Autowired
-  public SnsService(AmazonSNS a) {
-    this.amazonSns = a;
+  public SnsService(
+    AmazonSNS amazonSns,
+    @Value("${sns.topic.arn}") String healthStatusTopicArn,
+    @Value("${baseUrl}") String baseUrl,
+    @Value("${server.port}") Integer port
+  ) {
+    this.amazonSns = amazonSns;
+    this.healthStatusTopicArn = healthStatusTopicArn;
+    this.baseUrl = baseUrl;
+    this.port = port;
   }
 
   public void publishToTopic(String topicArn, String message) {
@@ -35,8 +43,8 @@ public class SnsService {
 
   @Scheduled(fixedDelay = 86_400_400)  // 1 day in ms TODO: change later
   public void publishHealthStatus() {
-    final String msg = String.format("%d|%s|%s|%s|%s", 3, "Auth_Service", baseUrl, "Active", "Null");
-    PublishResult res = amazonSns.publish(healthStatusTopicArn, msg);
-//    System.out.printf("Message ID: %s%n", res.getMessageId());
+    final String url = String.format("%s:%d", baseUrl, port);
+    final String msg = String.format("%d|%s|%s|%s|%s", 3, "Auth_Service", url, "Active", "Null");
+    amazonSns.publish(healthStatusTopicArn, msg);
   }
 }
