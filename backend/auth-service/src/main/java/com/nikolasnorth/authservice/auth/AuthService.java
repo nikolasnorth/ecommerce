@@ -2,6 +2,7 @@ package com.nikolasnorth.authservice.auth;
 
 import com.nikolasnorth.authservice.aws.SnsService;
 import com.nikolasnorth.authservice.entities.Account;
+import com.nikolasnorth.authservice.entities.ServiceRegistryResponseBody;
 import com.nikolasnorth.authservice.util.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,15 +30,29 @@ public class AuthService {
 
   private final SnsService snsService;
 
-  @Value("${sns.topic.arn}")
-  private String arn;
+  private final RestTemplate restTemplate;
+
+  private final String arn;
+
+  private final String serviceRegistryUrl;
 
   @Autowired
-  public AuthService(WebClient.Builder w, Jwt jwt, AuthRepository a, SnsService sns) {
-    this.client = w;
+  public AuthService(
+    WebClient.Builder webClientBuilder,
+    Jwt jwt,
+    AuthRepository authRepository,
+    SnsService snsService,
+    RestTemplate restTemplate,
+    @Value("${sns.topic.arn}") String arn,
+    @Value("${serviceRegistry.url}") String serviceRegistryUrl
+  ) {
+    this.client = webClientBuilder;
     this.jwt = jwt;
-    this.authRepository = a;
-    this.snsService = sns;
+    this.authRepository = authRepository;
+    this.snsService = snsService;
+    this.restTemplate = restTemplate;
+    this.arn = arn;
+    this.serviceRegistryUrl = serviceRegistryUrl;
   }
 
   public Account signUp(Account account, String password) {
@@ -48,9 +64,18 @@ public class AuthService {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "All fields are required.");
     }
     try {
+      final var res
+        = restTemplate.getForEntity(String.format("%s/%d", serviceRegistryUrl, 2), ServiceRegistryResponseBody.class);
+      if (res.getStatusCode() != HttpStatus.OK) {
+        throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE);
+      }
+      ServiceRegistryResponseBody body = res.getBody();
+      if (body == null || body.getServiceLocation() == null) {
+        throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE);
+      }
       final Account createdAccount = client.build()
         .post()
-        .uri("http://localhost:8082/api/v1/accounts")
+        .uri(body.getServiceLocation() + "/api/v1/accounts")
         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
         .body(Mono.just(account), Account.class)
         .retrieve()
@@ -82,9 +107,18 @@ public class AuthService {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email and password are required.");
     }
     try {
+      final var res
+        = restTemplate.getForEntity(String.format("%s/%d", serviceRegistryUrl, 2), ServiceRegistryResponseBody.class);
+      if (res.getStatusCode() != HttpStatus.OK) {
+        throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE);
+      }
+      ServiceRegistryResponseBody body = res.getBody();
+      if (body == null || body.getServiceLocation() == null) {
+        throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE);
+      }
       final Account account = client.build()
         .get()
-        .uri(String.format("http://localhost:8082/api/v1/accounts?email=%s", email))
+        .uri(String.format("%s/api/v1/accounts?email=%s", body.getServiceLocation(), email))
         .retrieve()
         .bodyToMono(Account.class)
         .block();

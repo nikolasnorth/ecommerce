@@ -4,6 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -18,5 +19,10 @@ public class AuthConfig {
       new Auth(2, "password2"),
       new Auth(3, "password3")
     ));
+  }
+
+  @Bean
+  RestTemplate restTemplate() {
+    return new RestTemplate();
   }
 }
