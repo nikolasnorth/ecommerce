@@ -1,6 +1,11 @@
 package com.nikolasnorth.apigateway;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,8 +16,24 @@ public class ApiGatewayCache {
 
   private final Map<ECommerceService, String> serviceUris;
 
-  public ApiGatewayCache() {
+  @Autowired
+  public ApiGatewayCache(RestTemplate restTemplate, @Value("${serviceRegistry.url}") String serviceRegistryUrl) {
     this.serviceUris = new HashMap<>();
+    ECommerceService[] services = ECommerceService.values();
+    for (ECommerceService service : services) {
+      final ResponseEntity<ServiceRegistryResponseBody> res
+        = restTemplate.getForEntity(String.format("%s/%d", serviceRegistryUrl, service.id), ServiceRegistryResponseBody.class);
+      if (res.getStatusCode() != HttpStatus.OK) {
+        System.err.printf("Did not receive 200 status code for %s response%n", service.label);
+        continue;
+      }
+      ServiceRegistryResponseBody body = res.getBody();
+      if (body == null || body.getServiceLocation() == null) {
+        System.err.printf("Service location for %s response was null%n", service.label);
+        continue;
+      }
+      this.put(service, body.getServiceLocation());
+    }
   }
 
   public Optional<String> get(ECommerceService service) {

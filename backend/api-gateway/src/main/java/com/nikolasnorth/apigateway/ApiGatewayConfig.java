@@ -2,6 +2,7 @@ package com.nikolasnorth.apigateway;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
@@ -24,6 +25,11 @@ public class ApiGatewayConfig {
     source.registerCorsConfiguration("/**", corsConfig);
 
     return new CorsWebFilter(source);
+  }
+
+  @Bean
+  public RestTemplate restTemplate() {
+    return new RestTemplate();
   }
 }
 
