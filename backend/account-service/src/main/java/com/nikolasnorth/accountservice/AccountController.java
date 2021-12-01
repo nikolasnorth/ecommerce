@@ -42,4 +42,9 @@ public class AccountController {
   public void deleteAccount(@PathVariable("id") int id) {
     accountService.deleteAccount(id);
   }
+
+  @GetMapping("/healthstatus")
+  public ResponseEntity<?> healthStatus() {
+    return ResponseEntity.ok().build();
+  }
 }
