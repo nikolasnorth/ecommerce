@@ -91,8 +91,7 @@ public class AuthService {
       final Auth auth = new Auth(createdAccount.getId(), password);
       authRepository.save(auth);
       // Publish account created message to aws topic
-   	  snsService.publishToTopic(arn, createdAccount.getEmail());
-      snsService.publishToTopic(arn, "{\"service\": \"SignUp\", \"email\": \"" + createdAccount.getEmail() + "\"}");
+      snsService.publishToTopic(emailArn, "{\"service\": \"SignUp\", \"email\": \"" + createdAccount.getEmail() + "\"}");
       return createdAccount;
     } catch (WebClientResponseException e) {
       if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
