@@ -1,0 +1,6 @@
+server:
+  port: 8083
+jwt:
+  secret: "mGE70yPP4E0Xqaw39zHt4byHmJXL02rjrDWVcuwa1uo"
+serviceRegistry:
+  url: "http://ec2-99-79-51-165.ca-central-1.compute.amazonaws.com:5001/api/services"
