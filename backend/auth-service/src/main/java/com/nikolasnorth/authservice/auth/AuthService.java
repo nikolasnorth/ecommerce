@@ -33,6 +33,7 @@ public class AuthService {
   private final RestTemplate restTemplate;
 
   private final String arn;
+  private final String emailArn;
 
   private final String serviceRegistryUrl;
 
@@ -44,6 +45,7 @@ public class AuthService {
     SnsService snsService,
     RestTemplate restTemplate,
     @Value("${sns.topic.arn}") String arn,
+    @Value("${sns.topic.emailArn}") String emailArn,
     @Value("${serviceRegistry.url}") String serviceRegistryUrl
   ) {
     this.client = webClientBuilder;
@@ -52,6 +54,7 @@ public class AuthService {
     this.snsService = snsService;
     this.restTemplate = restTemplate;
     this.arn = arn;
+    this.emailArn = emailArn;
     this.serviceRegistryUrl = serviceRegistryUrl;
   }
 
