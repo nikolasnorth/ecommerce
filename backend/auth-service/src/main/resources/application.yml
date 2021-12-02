@@ -20,6 +20,7 @@ jwt:
 sns:
   topic:
     arn: "arn:aws:sns:us-east-2:964806631323:HealthStatus"
+    emailArn: "arn:aws:sns:us-east-2:964806631323:EmailNotifications"
 aws:
   accessKey: "AKIA6BIXU36N6CS4H4R6"
   secretKey: "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"
