@@ -89,6 +89,35 @@ public class ApiGatewayRouteLocator {
             }
           })))
         .uri("no://op"))
+      .route(ECommerceService.ACCOUNT.label, p -> p
+        .path("/api/v1/products")
+        .or()
+        .path("/api/v1/products/*")
+        .filters(f -> f
+          .changeRequestUri((serverWebExchange -> {
+            try {
+              final var res
+                = restTemplate.getForEntity(String.format("%s/%d", serviceRegistryUrl, ECommerceService.ACCOUNT.id), ServiceRegistryResponseBody.class);
+              if (res.getStatusCode() != HttpStatus.OK) {
+                System.err.printf("Did not receive 200 status code for %s response%n", ECommerceService.ACCOUNT.label);
+                serverWebExchange.getResponse().setStatusCode(HttpStatus.SERVICE_UNAVAILABLE);
+                return Optional.empty();
+              }
+
+              ServiceRegistryResponseBody body = res.getBody();
+              if (body == null || body.getServiceLocation() == null) {
+                System.err.printf("Did not receive 200 status code for %s response%n", ECommerceService.ACCOUNT.label);
+                serverWebExchange.getResponse().setStatusCode(HttpStatus.SERVICE_UNAVAILABLE);
+                return Optional.empty();
+              }
+
+              return Optional.of(new URI(body.getServiceLocation() + serverWebExchange.getRequest().getPath()));
+            } catch (URISyntaxException e) {
+              System.err.println("Error occurred making URI");
+              return Optional.empty();
+            }
+          })))
+        .uri("no://op"))
       .build();
   }
 }

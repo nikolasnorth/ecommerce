@@ -25,7 +25,7 @@ public class ApiGatewayCache {
     this.serviceUris = new HashMap<>();
     this.restTemplate = restTemplate;
     this.serviceRegistryUrl = serviceRegistryUrl;
-    refresh();
+//    refresh();
   }
 
   public Optional<String> get(ECommerceService service) {
