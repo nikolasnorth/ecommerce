@@ -41,7 +41,7 @@ public class SnsService {
     }
   }
 
-  @Scheduled(fixedDelay = 86_400_400)  // 1 day in ms TODO: change later
+  @Scheduled(fixedDelay = 10_000)  // 1 day in ms TODO: change later
   public void publishHealthStatus() {
     final String url = String.format("%s:%d", baseUrl, port);
     final String msg = String.format("%d|%s|%s|%s|%s", 3, "Auth_Service", url, "Active", "Null");
