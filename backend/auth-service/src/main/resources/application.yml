@@ -1,0 +1,28 @@
+server:
+  port: 8085
+  error:
+    include-message: always
+spring:
+  datasource:
+    url: "jdbc:postgresql://ec2-3-95-130-249.compute-1.amazonaws.com:5432/d5rms6add5ptvd"
+    username: "vlznqecgvypfrg"
+    password: "616206bd9739aad355078d5028ec94a8f95142b61e4b89c435a47d491d11052b"
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: "org.hibernate.dialect.PostgreSQLDialect"
+        format_sql: true
+jwt:
+  secret: "mGE70yPP4E0Xqaw39zHt4byHmJXL02rjrDWVcuwa1uo"
+sns:
+  topic:
+    arn: "arn:aws:sns:us-east-2:964806631323:HealthStatus"
+aws:
+  accessKey: "AKIA6BIXU36N6CS4H4R6"
+  secretKey: "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"
+baseUrl: "http://ec2-18-223-32-115.us-east-2.compute.amazonaws.com"
+serviceRegistry:
+  url: "http://ec2-99-79-51-165.ca-central-1.compute.amazonaws.com:5001/api/services"
