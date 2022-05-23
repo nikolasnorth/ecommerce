@@ -1,5 +1,9 @@
 # E-Commerce REST API
 
+## Architectural Diagram
+
+![architectural diagram](https://github.com/nikolasnorth/ecommerce/blob/main/static/architecture-diagram.png)
+
 ## Introduction
 
 This project is a REST API for a replica e-commerce store built using the microservice architecture. The backend
